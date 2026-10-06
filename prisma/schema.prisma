@@ -1,0 +1,53 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mongodb"
+    url      = env("DATABASE_URL")
+}
+
+model Client {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    name      String
+    email     String   @unique
+    phone     String?
+    cpf       String   @unique
+    createdAt DateTime @default(now())
+}
+model Plan {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  description    String?
+  price          Float
+  durationMonths Int
+  active         Boolean  @default(true)
+  createdAt      DateTime @default(now())
+}
+model Contract {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  clientId  String   @db.ObjectId
+  planId    String   @db.ObjectId
+  startDate DateTime
+  endDate   DateTime
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+model Ticket {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  clientId     String   @db.ObjectId
+  contractId   String   @db.ObjectId
+  technicianId String?  @db.ObjectId
+  subject      String
+  description  String
+  status       String   @default("OPEN")
+  createdAt    DateTime @default(now())
+}
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("ATTENDANT")
+  createdAt DateTime @default(now())
+}
